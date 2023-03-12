@@ -12,7 +12,7 @@ function Box(props: JSX.IntrinsicElements["mesh"]) {
 
   const { scale } = useSpring({
     scale: clicked ? [2, 2, 2] : [1, 1, 1],
-    config: config.molasses ,
+    config: config.molasses,
   });
 
   return (
@@ -33,7 +33,7 @@ function Box(props: JSX.IntrinsicElements["mesh"]) {
 function App() {
   return (
     <>
-      <h1>Mugi's Three.js App'</h1>
+      <h1>Mugi's Three.js App</h1>
       <div id="canvas-container">
         <Canvas>
           <Box position={[-1.6, 0, 0]} />
