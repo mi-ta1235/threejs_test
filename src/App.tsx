@@ -1,34 +1,50 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import "./App.css";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { useState, useRef } from "react";
+import { config, useSpring, animated } from "@react-spring/three";
 
-function App() {
-  const [count, setCount] = useState(0)
+function Box(props: JSX.IntrinsicElements["mesh"]) {
+  const ref = useRef();
+  const [clicked, setClicked] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
+  useFrame(() => (ref.current.rotation.x += 0.005));
+
+  const { scale } = useSpring({
+    scale: clicked ? [2, 2, 2] : [1, 1, 1],
+    config: config.molasses ,
+  });
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+    <animated.mesh
+      {...props}
+      ref={ref}
+      onClick={() => setClicked(!clicked)}
+      onPointerOver={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}
+      scale={scale}
+    >
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color={hovered ? "hotpink" : "orange"} />
+    </animated.mesh>
+  );
 }
 
-export default App
+function App() {
+  return (
+    <>
+      <h1>Mugi's Three.js App'</h1>
+      <div id="canvas-container">
+        <Canvas>
+          <Box position={[-1.6, 0, 0]} />
+          <Box position={[1.6, 0, 0]} />
+          <ambientLight intensity={0.2} />
+          <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
+          <pointLight position={[-10, -10, -10]} />
+        </Canvas>
+      </div>
+    </>
+  );
+}
+
+export default App;
